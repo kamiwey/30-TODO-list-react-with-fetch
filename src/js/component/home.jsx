@@ -21,9 +21,7 @@ export function Home() {
 			setTaskList([...tasklist].concat(newTask));
 			
 			setTask("");
-		} else if (e.key === "Enter" && task == "") {
-			alert("Upps, you must enter a task");
-		}
+		} 
 	};
 
 	const genList = () => {
@@ -76,7 +74,7 @@ export function Home() {
 					<label htmlFor="list-group-item">
 						<p className="text-muted ml-5 mt-2">
 							{tasklist.length == 0
-								? "No tasks, add a task"
+								? " No tasks, add a task"
 								: tasklist.length + " item left"}
 						</p>
 					</label>
