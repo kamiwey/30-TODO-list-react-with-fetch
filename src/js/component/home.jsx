@@ -21,7 +21,9 @@ export function Home() {
 			setTaskList([...tasklist].concat(newTask));
 			
 			setTask("");
-		} 
+		} else if (e.key === "Enter" && task == "") {
+			alert("The input cannot be empty");
+		}
 	};
 
 	const genList = () => {
