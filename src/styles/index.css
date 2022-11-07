@@ -69,3 +69,17 @@ body {
     font-size: 25px;
 }
 
+.deleteAll {
+    border-bottom: 1px solid rgb(195, 195, 195);
+    margin-right: 17px;
+    background-color: transparent;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 18px;
+   
+}
+
+.borratodo {
+    margin-left: 10px;
+    font-size: 25px;
+    
+}
