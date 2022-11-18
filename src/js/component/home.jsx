@@ -11,6 +11,26 @@ export function Home() {
 		getTodoList();
 	}, []);
 
+	const PutTodoList =(updateTaskList) => {
+		var myHeaders = new Headers();
+		myHeaders.append("content-Type", "application/json");
+		var raw = JSON.stringify(updateTaskList);
+		var rawData = {
+			method: "PUT",
+			headers: myHeaders,
+			body: raw,
+			
+		};
+
+		fetch(
+			"https://assets.breatheco.de/apis/fake/todos/user/kamiwey",
+			rawData
+		)
+			.then(response => response.text())
+			.then(setTodos(updateTaskList))
+			.catch(error => console.error("Error", error));
+	}
+
 	const getTodoList = () => {
 		var myHeaders = new Headers();
 		myHeaders.append("Content-Type", "application/json");
@@ -50,25 +70,7 @@ export function Home() {
 		}
 	};
 
-	function PutTodoList(updateTaskList) {
-		var myHeaders = new Headers();
-		myHeaders.append("content-Type", "application/json");
-		var raw = JSON.stringify(updateTaskList);
-		var rawData = {
-			method: "PUT",
-			headers: myHeaders,
-			body: raw,
-			
-		};
-
-		fetch(
-			"https://assets.breatheco.de/apis/fake/todos/user/kamiwey",
-			rawData
-		)
-			.then(response => response.text())
-			.then(setTodos(updateTaskList))
-			.catch(error => console.error("Error", error));
-	}
+	
 
 	const KeyPressDelete = id => {
 		let updateTaskList = [...todos];
