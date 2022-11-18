@@ -3,60 +3,58 @@ import React, { useEffect, useState } from "react";
 //create your first component
 export function Home() {
 	
-	const [tasklist, setTaskList] = useState([]);
-	const [task, setTask] = useState("");
-	const [hoverTask, setHoverTask] = useState(false);
+	const [inputValue, setInputValue] = useState("");
+	const [todos, setTodos] = useState([]);
+	const [mouseHover, setMouseHover] = useState(false);
 
 	useEffect(() => {
-		getTaskList();
+		getTodoList();
 	}, []);
 
-	const getTaskList = () => {
+	const getTodoList = () => {
 		var myHeaders = new Headers();
 		myHeaders.append("Content-Type", "application/json");
-
-		var requestOptions = {
+			var request = {
 			method: "GET",
 			headers: myHeaders,
-			
-		};
+			};
 
 		fetch(
 			"https://assets.breatheco.de/apis/fake/todos/user/kamiwey",
-			requestOptions
+			request
 		)
 			.then(response => response.json())
-			.then(result => setTaskList(result))
+			.then(result => setTodos(result))
 			.catch(error => console.log("error", error));
 	};
 	
-	const handleOnKeyPress = e => {
+	const KeyPress = (e) => {
 		
-		if (e.key === "Enter" && task !== "") {
-			e.preventDefault();
+		if (e.key === "Enter" && inputValue !== "") {
+			e.default();
 			
-			const newTask = {
+			const newTodo = {
 				label: task,
 				done: false
 			};
-			if (tasklist.length == 1 && tasklist [0].done == true) {
-				putTaskList([newTask]);
-				setTask("");
+			if (todos.length == 1 && todos [0].done == true) {
+				PutTodoList([newTodo]);
+				setInputValue("");
 			} else {
-				const updateTaskList = [...tasklist].concat([newTask]);
-				setTask("");
-				putTaskList(updateTaskList);
+				const updateTaskList = [...todos].concat([newTodo]);
+				setInputValue("");
+				PutTodoList(updateTaskList);
 			}	
-		} else if (e.key === "Enter" && task == "") {
-			alert("The input cannot be empty");
+		} else if (e.key === "Enter" && inputValue == "") {
+			alert("Please type a task");
 		}
 	};
 
-	function putTaskList(updateTaskList) {
+	function PutTodoList(updateTaskList) {
 		var myHeaders = new Headers();
 		myHeaders.append("content-Type", "application/json");
 		var raw = JSON.stringify(updateTaskList);
-		var requestOptions = {
+		var rawData = {
 			method: "PUT",
 			headers: myHeaders,
 			body: raw,
@@ -65,25 +63,24 @@ export function Home() {
 
 		fetch(
 			"https://assets.breatheco.de/apis/fake/todos/user/kamiwey",
-			requestOptions
+			rawData
 		)
 			.then(response => response.text())
-			.then(setTaskList(updateTaskList))
-			.then(result => console.log(result))
-			.catch(error => console.log("error", error));
+			.then(setTodos(updateTaskList))
+			.catch(error => console.error("Error", error));
 	}
 
-	const handleOnClickDelete = id => {
-		let updateTaskList = [...tasklist];
+	const KeyPressDelete = id => {
+		let updateTaskList = [...todos];
 		updateTaskList.splice(id, 1);
 		if (updateTaskList.length > 0) {
-			putTaskList(updateTaskList);
+			PutTodoList(updateTaskList);
 		} else {
-			putTaskList(defTask);
+			PutTodoList(TodoDefault);
 		}
 	};
 
-	const defTask = [
+	const TodoDefault = [
 		{
 			label: 
 				"No more Tasks, you are a HERO!!",
@@ -92,22 +89,22 @@ export function Home() {
 	];
 
 
-	const genList = () => {
+	const GetTodoList = () => {
 		
-		return tasklist.map((task, index) => {
+		return todos.map((inputValue, index) => {
 			return (
 				<li
 					key={index}
 					className="list-group-item"
-					onMouseEnter={() => setHoverTask(index)}>
+					onMouseEnter={() => setMouseHover(index)}>
 					<p className="d-inline-block text-secondary ml-4 fs-3 align-middle">- 
-						{task.label}
+						{inputValue.label}
 					</p>
-					{index == hoverTask && task.done == false ? (
+					{index == mouseHover && inputValue.done == false ? (
 						<button
 							type="button"
 							className="delete btn text-muted"
-							onClick={() => handleOnClickDelete(index)}>
+							onClick={() => KeyPressDelete(index)}>
 							<i className="fa-regular fa-trash-can"></i>
 						</button>
 					) : null}
@@ -123,18 +120,18 @@ export function Home() {
 			<div className="tasker d-flex flex-row">
 			<input
 				type="text"
-				placeholder="  Type a new task"
+				placeholder="  Add your task here."
 				className="tasker2 text-muted"
-				value={task}
-				onChange={e => setTask(e.target.value)}
-				onKeyPress={e => handleOnKeyPress(e)}
+				value={inputValue}
+				onChange={(e) => setInputValue(e.target.value)}
+				onKeyPress={(e) => KeyPress(e)}
 			>
 
 			</input>
 			<button
 					type="button"
 					className="deleteAll btn text-muted col-md-auto rounded-0"
-					onClick={() => putTaskList(defTask)}>	
+					onClick={() => PutTodoList(defTask)}>	
 					All tasks 
 					<i className="borratodo fa-regular fa-trash-can"></i>
 				</button>
@@ -142,13 +139,13 @@ export function Home() {
 
 			</div>
 			<ul className="list-group">
-				{genList()}
+				{GetTodoList()}
 				<div>
 					<label htmlFor="list-group-item">
 						<p className="text-muted ml-5 mt-2">
-							{tasklist.length == 0
-								? " No tasks, add a task"
-								: tasklist.length + " item left"}
+							{todos.length == 0
+								? " No tasks, add a new one."
+								: todos.length + " item left"}
 						</p>
 					</label>
 				</div>
